@@ -32,7 +32,7 @@ module MigrationSignature
       unless signature?
         new_lines.unshift("\n")
         # add blank line between magic comments and content
-        if !new_lines[1].empty? && !new_lines[2].start_with?('#')
+        if !new_lines[1].empty? && !new_lines[1].start_with?('#')
           new_lines.unshift("\n")
         end
       end
