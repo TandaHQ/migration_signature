@@ -1,0 +1,50 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'migration_signature'
+require 'optparse'
+
+OptionParser.new do |parser|
+  parser.banner = <<~BANNER
+    Usage: migration_signature {check|buildall|build <file>}
+
+        check        - Check all your migration files for present and correct migration signatures
+        buildall     - Rebuild all migration signatures for all files (should only be used in setup)
+        build <file> - Rebuild a migration signature for a single migration
+
+  BANNER
+
+  parser.on('-h', '--help', 'Prints this help') do
+    puts parser
+    exit
+  end
+end.parse!
+
+action = ARGV[0]
+unless action
+  warn 'You must supply one of {check|buildall|build <file>}'
+  exit 1
+end
+
+if action == 'check'
+  begin
+    MigrationSignature.check_all
+  rescue MigrationSignature::InvalidSignatureError => e
+    warn e.message
+    exit 1
+  end
+elsif action == 'buildall'
+  MigrationSignature.build_all
+elsif action == 'build'
+  file = ARGV[1]
+
+  unless file
+    warn 'You must supply a file to build a signature for'
+    exit 1
+  end
+
+  MigrationSignature.build_file(file)
+else
+  warn 'You must supply one of {check|buildall|build <file>}'
+  exit 1
+end
