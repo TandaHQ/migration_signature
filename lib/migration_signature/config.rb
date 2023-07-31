@@ -14,7 +14,11 @@ module MigrationSignature
       return new(DEFAULTS) unless File.exist?(CONFIG_FILE_PATH)
 
       require 'yaml'
-      hash = YAML.safe_load(File.read(CONFIG_FILE_PATH), [Regexp]) || {}
+      hash = if Gem::Version.new(Psych::VERSION) >= Gem::Version.new("4.0.0")
+        YAML.safe_load(File.read(CONFIG_FILE_PATH), permitted_classes: [Regexp])
+      else
+        YAML.safe_load(File.read(CONFIG_FILE_PATH), [Regexp])
+      end || {}
 
       new(DEFAULTS.merge(hash))
     end
