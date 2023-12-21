@@ -6,11 +6,9 @@ require 'optparse'
 
 OptionParser.new do |parser|
   parser.banner = <<~BANNER
-    Usage: migration_signature {check|buildall|build <file>}
+    Usage: migration_signature {check}
 
         check        - Check all your migration files for present and correct migration signatures
-        buildall     - Rebuild all migration signatures for all files (should only be used in setup)
-        build <file> - Rebuild a migration signature for a single migration
 
   BANNER
 
@@ -22,7 +20,7 @@ end.parse!
 
 action = ARGV[0]
 unless action
-  warn 'You must supply one of {check|buildall|build <file>}'
+  warn 'You must supply one of {check}'
   exit 1
 end
 
@@ -33,18 +31,7 @@ if action == 'check'
     warn e.message
     exit 1
   end
-elsif action == 'buildall'
-  MigrationSignature.build_all
-elsif action == 'build'
-  file = ARGV[1]
-
-  unless file
-    warn 'You must supply a file to build a signature for'
-    exit 1
-  end
-
-  MigrationSignature.build_file(file)
 else
-  warn 'You must supply one of {check|buildall|build <file>}'
+  warn 'You must supply one of {check}'
   exit 1
 end

@@ -21,12 +21,6 @@ module MigrationSignature
     true
   end
 
-  def self.build_all
-    config.all_runnable_files.each do |path|
-      MigrationSignature::MigrationFile.new(path).update_signature!
-    end
-  end
-
   def self.build_file(file)
     mf = MigrationSignature::MigrationFile.new(file)
 
