@@ -75,12 +75,6 @@ Or install it yourself as:
 gem install migration_signature
 ```
 
-To build signatures for all existing migrations, run the following:
-
-```bash
-bundle exec migration_signature buildall
-```
-
 ## Usage
 
 Migration signatures will automatically be prepended to migration files when 
